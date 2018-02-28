@@ -3065,6 +3065,7 @@ UniValue z_listreceivedbyaddress(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. \"address\"      (string) The private address.\n"
             "2. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
+            "                    Use negative number to specify exact block height at which the transactions were confirmed.\n"
             "\nResult:\n"
             "{\n"
             "  \"txid\": xxxxx,     (string) the transaction id\n"
@@ -3081,9 +3082,6 @@ UniValue z_listreceivedbyaddress(const UniValue& params, bool fHelp)
     int nMinDepth = 1;
     if (params.size() > 1) {
         nMinDepth = params[1].get_int();
-    }
-    if (nMinDepth < 0) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum number of confirmations cannot be less than 0");
     }
 
     // Check that the from address is valid.

@@ -3698,7 +3698,7 @@ void CWallet::GetFilteredNotes(
         CWalletTx wtx = p.second;
 
         // Filter the transactions before checking for notes
-        if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || wtx.GetDepthInMainChain() < minDepth) {
+        if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || ((minDepth >= 0 && wtx.GetDepthInMainChain() < minDepth) || (minDepth < 0 && chainActive.Height()-wtx.GetDepthInMainChain()+1 != -1*minDepth))) {
             continue;
         }
 
