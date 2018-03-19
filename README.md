@@ -64,6 +64,22 @@ The above mentioned command should configure your votecoin already by creating ~
     echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >>~/.votecoin/votecoin.conf
 
 
+Installing
+----------
+
+Compiled binaries can be found in ./src directory. Copy them to your working path:
+
+    cp ./src/votecoin-cli /usr/bin
+    cp ./src/votecoind /usr/bin
+    cp ./zcutil/vot /usr/bin
+
+
+Running
+-------
+
+    $ votecoind
+
+
 Mining
 ------
 
@@ -80,24 +96,7 @@ join a pool. There are several pools in operation at the moment, for example:
     http://pcmining.xyz:8080
     https://vot.lucky-mining.com.ua
     http://votecoin.pearpool.com
-
-
-
-Installing
-----------
-
-Compiled binaries can be found in ./src directory. Copy them to your working path:
-
-    cp ./src/votecoin-cli /usr/bin
-    cp ./src/votecoind /usr/bin
-    cp ./zcutil/vot /usr/bin
-
-
-Running
--------
-
-    $ votecoind
-
+    
 
 Generating Transparent address
 ------------------------------
