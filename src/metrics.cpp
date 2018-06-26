@@ -16,14 +16,7 @@
 #include <boost/thread.hpp>
 #include <boost/thread/synchronized_value.hpp>
 #include <string>
-
-#ifdef WIN32
-#include <io.h>
-#include <windows.h>
-#else
 #include <sys/ioctl.h>
-#endif
-
 #include <unistd.h>
 
 void AtomicTimer::start()
@@ -71,21 +64,21 @@ double AtomicTimer::rate(const AtomicCounter& count)
     return duration > 0 ? (double)count.get() / duration : 0;
 }
 
-CCriticalSection cs_metrics;
+static CCriticalSection cs_metrics;
 
-boost::synchronized_value<int64_t> nNodeStartTime;
-boost::synchronized_value<int64_t> nNextRefresh;
+static boost::synchronized_value<int64_t> nNodeStartTime;
+static boost::synchronized_value<int64_t> nNextRefresh;
 AtomicCounter transactionsValidated;
 AtomicCounter ehSolverRuns;
 AtomicCounter solutionTargetChecks;
-AtomicCounter minedBlocks;
+static AtomicCounter minedBlocks;
 AtomicTimer miningTimer;
 
-boost::synchronized_value<std::list<uint256>> trackedBlocks;
+static boost::synchronized_value<std::list<uint256>> trackedBlocks;
 
-boost::synchronized_value<std::list<std::string>> messageBox;
-boost::synchronized_value<std::string> initMessage;
-bool loaded = false;
+static boost::synchronized_value<std::list<std::string>> messageBox;
+static boost::synchronized_value<std::string> initMessage;
+static bool loaded = false;
 
 extern int64_t GetNetworkHashPS(int lookup, int height);
 
@@ -462,18 +455,11 @@ void ThreadShowMetricsScreen()
 
         // Get current window size
         if (isTTY) {
-
-#ifdef WIN32
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-        cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-#else
             struct winsize w;
             w.ws_col = 0;
             if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1 && w.ws_col != 0) {
                 cols = w.ws_col;
             }
-#endif
         }
 
         if (isScreen) {

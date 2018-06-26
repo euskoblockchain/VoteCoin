@@ -7,7 +7,7 @@
 #include "consensus/upgrades.h"
 
 CWalletTx GetValidReceive(ZCJoinSplit& params,
-                          const libzcash::SpendingKey& sk, CAmount value,
+                          const libzcash::SproutSpendingKey& sk, CAmount value,
                           bool randomInputs) {
     CMutableTransaction mtx;
     mtx.nVersion = 2; // Enable JoinSplits
@@ -38,11 +38,9 @@ CWalletTx GetValidReceive(ZCJoinSplit& params,
         libzcash::JSOutput(sk.address(), value)
     };
 
-    boost::array<libzcash::Note, 2> output_notes;
-
     // Prepare JoinSplits
     uint256 rt;
-    JSDescription jsdesc {params, mtx.joinSplitPubKey, rt,
+    JSDescription jsdesc {false, params, mtx.joinSplitPubKey, rt,
                           inputs, outputs, 2*value, 0, false};
     mtx.vjoinsplit.push_back(jsdesc);
 
@@ -63,12 +61,12 @@ CWalletTx GetValidReceive(ZCJoinSplit& params,
     return wtx;
 }
 
-libzcash::Note GetNote(ZCJoinSplit& params,
-                       const libzcash::SpendingKey& sk,
+libzcash::SproutNote GetNote(ZCJoinSplit& params,
+                       const libzcash::SproutSpendingKey& sk,
                        const CTransaction& tx, size_t js, size_t n) {
     ZCNoteDecryption decryptor {sk.receiving_key()};
     auto hSig = tx.vjoinsplit[js].h_sig(params, tx.joinSplitPubKey);
-    auto note_pt = libzcash::NotePlaintext::decrypt(
+    auto note_pt = libzcash::SproutNotePlaintext::decrypt(
         decryptor,
         tx.vjoinsplit[js].ciphertexts[n],
         tx.vjoinsplit[js].ephemeralKey,
@@ -78,8 +76,8 @@ libzcash::Note GetNote(ZCJoinSplit& params,
 }
 
 CWalletTx GetValidSpend(ZCJoinSplit& params,
-                        const libzcash::SpendingKey& sk,
-                        const libzcash::Note& note, CAmount value) {
+                        const libzcash::SproutSpendingKey& sk,
+                        const libzcash::SproutNote& note, CAmount value) {
     CMutableTransaction mtx;
     mtx.vout.resize(2);
     mtx.vout[0].nValue = value;
@@ -98,14 +96,14 @@ CWalletTx GetValidSpend(ZCJoinSplit& params,
     libzcash::JSInput dummyin;
 
     {
-        if (note.value > value) {
-            libzcash::SpendingKey dummykey = libzcash::SpendingKey::random();
-            libzcash::PaymentAddress dummyaddr = dummykey.address();
-            dummyout = libzcash::JSOutput(dummyaddr, note.value - value);
-        } else if (note.value < value) {
-            libzcash::SpendingKey dummykey = libzcash::SpendingKey::random();
-            libzcash::PaymentAddress dummyaddr = dummykey.address();
-            libzcash::Note dummynote(dummyaddr.a_pk, (value - note.value), uint256(), uint256());
+        if (note.value() > value) {
+            libzcash::SproutSpendingKey dummykey = libzcash::SproutSpendingKey::random();
+            libzcash::SproutPaymentAddress dummyaddr = dummykey.address();
+            dummyout = libzcash::JSOutput(dummyaddr, note.value() - value);
+        } else if (note.value() < value) {
+            libzcash::SproutSpendingKey dummykey = libzcash::SproutSpendingKey::random();
+            libzcash::SproutPaymentAddress dummyaddr = dummykey.address();
+            libzcash::SproutNote dummynote(dummyaddr.a_pk, (value - note.value()), uint256(), uint256());
             tree.append(dummynote.cm());
             dummyin = libzcash::JSInput(tree.witness(), dummynote, dummykey);
         }
@@ -123,11 +121,9 @@ CWalletTx GetValidSpend(ZCJoinSplit& params,
         libzcash::JSOutput() // dummy output
     };
 
-    boost::array<libzcash::Note, 2> output_notes;
-
     // Prepare JoinSplits
     uint256 rt = tree.root();
-    JSDescription jsdesc {params, mtx.joinSplitPubKey, rt,
+    JSDescription jsdesc {false, params, mtx.joinSplitPubKey, rt,
                           inputs, outputs, 0, value, false};
     mtx.vjoinsplit.push_back(jsdesc);
 

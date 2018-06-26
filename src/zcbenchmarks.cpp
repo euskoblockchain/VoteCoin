@@ -116,7 +116,8 @@ double benchmark_create_joinsplit()
 
     struct timeval tv_start;
     timer_start(tv_start);
-    JSDescription jsdesc(*pzcashParams,
+    JSDescription jsdesc(true,
+                         *pzcashParams,
                          pubKeyHash,
                          anchor,
                          {JSInput(), JSInput()},
@@ -243,8 +244,8 @@ double benchmark_large_tx(size_t nInputs)
 
     CMutableTransaction spending_tx;
     spending_tx.fOverwintered = true;
-    spending_tx.nVersion = 3;
-    spending_tx.nVersionGroupId = OVERWINTER_VERSION_GROUP_ID;
+    spending_tx.nVersionGroupId = SAPLING_VERSION_GROUP_ID;
+    spending_tx.nVersion = SAPLING_TX_VERSION;
 
     auto input_hash = orig_tx.GetHash();
     // Add nInputs inputs
@@ -253,7 +254,7 @@ double benchmark_large_tx(size_t nInputs)
     }
 
     // Sign for all the inputs
-    auto consensusBranchId = NetworkUpgradeInfo[Consensus::UPGRADE_OVERWINTER].nBranchId;
+    auto consensusBranchId = NetworkUpgradeInfo[Consensus::UPGRADE_SAPLING].nBranchId;
     for (size_t i = 0; i < nInputs; i++) {
         SignSignature(tempKeystore, prevPubKey, spending_tx, i, 1000000, SIGHASH_ALL, consensusBranchId);
     }
@@ -281,11 +282,11 @@ double benchmark_try_decrypt_notes(size_t nAddrs)
 {
     CWallet wallet;
     for (int i = 0; i < nAddrs; i++) {
-        auto sk = libzcash::SpendingKey::random();
+        auto sk = libzcash::SproutSpendingKey::random();
         wallet.AddSpendingKey(sk);
     }
 
-    auto sk = libzcash::SpendingKey::random();
+    auto sk = libzcash::SproutSpendingKey::random();
     auto tx = GetValidReceive(*pzcashParams, sk, 10, true);
 
     struct timeval tv_start;
@@ -299,7 +300,7 @@ double benchmark_increment_note_witnesses(size_t nTxs)
     CWallet wallet;
     ZCIncrementalMerkleTree tree;
 
-    auto sk = libzcash::SpendingKey::random();
+    auto sk = libzcash::SproutSpendingKey::random();
     wallet.AddSpendingKey(sk);
 
     // First block
@@ -366,7 +367,7 @@ public:
         return false;
     }
 
-    bool GetNullifier(const uint256 &nf) const {
+    bool GetNullifier(const uint256 &nf, ShieldedType type) const {
         return false;
     }
 
@@ -381,8 +382,9 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins,
                     const uint256 &hashBlock,
                     const uint256 &hashAnchor,
-                    CAnchorsMap &mapAnchors,
-                    CNullifiersMap &mapNullifiers) {
+                    CAnchorsSproutMap &mapSproutAnchors,
+                    CNullifiersMap &mapSproutNullifiers,
+                    CNullifiersMap& mapSaplingNullifiers) {
         return false;
     }
 

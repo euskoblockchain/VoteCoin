@@ -7,7 +7,6 @@
 
 #include "amount.h"
 #include "asyncrpcoperation.h"
-#include "base58.h"
 #include "paymentdisclosure.h"
 #include "primitives/transaction.h"
 #include "wallet.h"
@@ -28,7 +27,7 @@ using namespace libzcash;
 typedef std::tuple<COutPoint, CAmount> MergeToAddressInputUTXO;
 
 // Input JSOP is a tuple of JSOutpoint, note, amount, spending key
-typedef std::tuple<JSOutPoint, Note, CAmount, SpendingKey> MergeToAddressInputNote;
+typedef std::tuple<JSOutPoint, SproutNote, CAmount, SpendingKey> MergeToAddressInputNote;
 
 // A recipient is a tuple of address, memo (optional if zaddr)
 typedef std::tuple<std::string, std::string> MergeToAddressRecipient;
@@ -37,8 +36,8 @@ typedef std::tuple<std::string, std::string> MergeToAddressRecipient;
 struct MergeToAddressJSInfo {
     std::vector<JSInput> vjsin;
     std::vector<JSOutput> vjsout;
-    std::vector<Note> notes;
-    std::vector<SpendingKey> zkeys;
+    std::vector<SproutNote> notes;
+    std::vector<SproutSpendingKey> zkeys;
     CAmount vpub_old = 0;
     CAmount vpub_new = 0;
 };
@@ -86,7 +85,7 @@ private:
     MergeToAddressRecipient recipient_;
     bool isToTaddr_;
     bool isToZaddr_;
-    CBitcoinAddress toTaddr_;
+    CTxDestination toTaddr_;
     PaymentAddress toPaymentAddress_;
 
     uint256 joinSplitPubKey_;
@@ -120,6 +119,10 @@ private:
     void lock_utxos();
 
     void unlock_utxos();
+
+    void lock_notes();
+
+    void unlock_notes();
 
     // payment disclosure!
     std::vector<PaymentDisclosureKeyInfo> paymentDisclosureData_;
