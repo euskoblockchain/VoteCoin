@@ -24,6 +24,10 @@ cp -f zcashd votecoind
 cp -f zcash-cli votecoin-cli
 cp -f zcash-tx votecoin-tx
 
+strip --strip-unneeded votecoind
+strip --strip-unneeded votecoin-cli
+strip --strip-unneeded votecoin-tx
+
 echo ""
 echo "--------------------------------------------------------------------------"
 echo "Compilation complete. Now you can run ./src/votecoind to start the daemon."
