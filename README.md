@@ -30,14 +30,21 @@ time after this 16 week time period. The automatic feature is based on block
 height and can be explicitly disabled.
 
 
-Windows release
+Binary releases
 ---------------
 
-There is a precompiled Windows version of VoteCoin. You can download it from
-https://github.com/Tomas-M/VoteCoin/releases/
-The download is 853 MB due to zkSNARK proving key which is included in the release.
-Simply unzip and read README.txt. If you use precompiled Windows binaries, you can
+There are precompiled binary releases of VoteCoin for Windows, Linux and MAC.
+You can download them from https://github.com/Tomas-M/VoteCoin/releases/
+Simply unzip and read README.txt. If you use precompiled binaries, you can
 skip to the section "Running" in this document now.
+
+
+GUI release
+-----------
+
+There is a GUI release of VoteCoin wallet available for Windows, Linux and MAC.
+You can download them from https://github.com/Tomas-M/VoteCoin-wallet/releases/
+Simply unzip and run votecoin executable.
 
 
 Building
