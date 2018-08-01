@@ -882,8 +882,10 @@ bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state,
 
     // If Sprout rules apply, reject transactions which are intended for Overwinter and beyond
     if (isSprout && tx.fOverwintered) {
-        return state.DoS(dosLevel, error("ContextualCheckTransaction(): overwinter is not active yet"),
-                         REJECT_INVALID, "tx-overwinter-not-active");
+        LogPrintf("WARNING: ContextualCheckTransaction(): overwinter is not active yet\n");
+        return false;
+//        return state.DoS(dosLevel, error("ContextualCheckTransaction(): overwinter is not active yet"),
+//                         REJECT_INVALID, "tx-overwinter-not-active");
     }
 
     if (saplingActive) {
