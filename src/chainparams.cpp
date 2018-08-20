@@ -82,8 +82,9 @@ public:
     CMainParams() {
         strNetworkID = "main";
         strCurrencyUnits = "VOT";
+        bip44CoinType = 1331; // As registered in https://github.com/satoshilabs/slips/blob/master/slip-0044.md
         consensus.fCoinbaseMustBeProtected = true;
-        consensus.nSubsidySlowStartInterval = 10;
+        consensus.nSubsidySlowStartInterval = 20;
         consensus.nSubsidyHalvingInterval = 840000;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
@@ -103,8 +104,10 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170005;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 180000;
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170007;
-        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight =
-            Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 245555;
+
+        // The best chain should have at least this much work.
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000281b32ff3198a1");
 
         /**
          * The message start string should be awesome! ⓩ❤
@@ -115,7 +118,6 @@ public:
         pchMessageStart[3] = 0x64;
         vAlertPubKey = ParseHex("04b7ecf0baa90495ceb4e4090f6b2fd37eec1e9c85fac68a487f3ce11589692e4a317479316ee814e066638e1db54e37a10689b70286e6315b1087b6615d179264");
         nDefaultPort = 8144;
-        nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
         const size_t N = 200, K = 9;
         BOOST_STATIC_ASSERT(equihash_parameters_acceptable(N, K));
@@ -172,11 +174,17 @@ public:
             (10, uint256S("0x003fa6a6bbcea855fb76e478fda40c28b454e74537fbeb889e50b41710d4d41e"))
             (10000, uint256S("0x00000fbda97b62268d2eb2ed9e63ae23a9a02c3f6cb7023cd56443a215c9c0ed"))
             (16800, uint256S("0x0000009771cf774a233ca47b5ceee89dd9296c82e8c9b0a96d00f57b26d5925c"))
-            (39555, uint256S("0x0000000bbc03146dfb317de60c346b518e88defa4232db6f64b43a515b6d4df2")),
-            1509706593,    // * UNIX timestamp of last checkpoint block
-            109408,        // * total number of transactions between genesis and last checkpoint
+            (39555, uint256S("0x0000000bbc03146dfb317de60c346b518e88defa4232db6f64b43a515b6d4df2"))
+            (74444, uint256S("0x0000001853a3a5617dc5aae21bae39da50184b0c6b461ada2ec54b78c38ae7e9"))
+            (99999, uint256S("0x0000000cc5d00876dbcd12bee9345e1596f03366166b4b07a93aa72dd9705fdd"))
+            (124124, uint256S("0x0000006e4c2853c154001e6af6671ee0189d6c6c83447c8f43783839caddf91e"))
+            (149999, uint256S("0x00000016a4855e91a2f435ad480d16dfe297b9d6e3319da5b3f3aa19641d4236"))
+            (177777, uint256S("0x0000001893fd6c1754987f1256a24758206d8dcb66968d1ac6acd45615987def"))
+            (199999, uint256S("0x0000007f82647f3ed9beb69875ce82c5865253dccf53f4cfa1ede2eda2876001")),
+            1533930255,    // * UNIX timestamp of last checkpoint block
+            663207,        // * total number of transactions between genesis and last checkpoint
                            //   (the tx=... number in the SetBestChain debug.log lines)
-            1593           // * estimated number of transactions per day after checkpoint
+            1910           // * estimated number of transactions per day after checkpoint
                            //   total number of tx / checkpoint block height * 576
         };
 
@@ -251,6 +259,7 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         strCurrencyUnits = "TAZ";
+        bip44CoinType = 1;
         consensus.fCoinbaseMustBeProtected = true;
         consensus.nSubsidySlowStartInterval = 20000;
         consensus.nSubsidyHalvingInterval = 840000;
@@ -271,8 +280,11 @@ public:
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170003;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 207500;
-        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170006;
-        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 252500;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170007;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 280000;
+
+        // The best chain should have at least this much work.
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000000001d0c4d9cd");
 
         pchMessageStart[0] = 0xfa;
         pchMessageStart[1] = 0x1a;
@@ -280,7 +292,6 @@ public:
         pchMessageStart[3] = 0xbf;
         vAlertPubKey = ParseHex("044e7a1553392325c871c5ace5d6ad73501c66f4c185d6b0453cf45dec5a1322e705c672ac1a27ef7cdaf588c10effdf50ed5f95f85f2f54a5f6159fca394ed0c6");
         nDefaultPort = 18233;
-        nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
         const size_t N = 200, K = 9;
         BOOST_STATIC_ASSERT(equihash_parameters_acceptable(N, K));
@@ -329,6 +340,7 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
 
+
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
             (0, consensus.hashGenesisBlock)
@@ -367,6 +379,7 @@ public:
     CRegTestParams() {
         strNetworkID = "regtest";
         strCurrencyUnits = "REG";
+        bip44CoinType = 1;
         consensus.fCoinbaseMustBeProtected = false;
         consensus.nSubsidySlowStartInterval = 0;
         consensus.nSubsidyHalvingInterval = 150;
@@ -392,12 +405,14 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight =
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
+        // The best chain should have at least this much work.
+        consensus.nMinimumChainWork = uint256S("0x00");
+
         pchMessageStart[0] = 0xaa;
         pchMessageStart[1] = 0xe8;
         pchMessageStart[2] = 0x3f;
         pchMessageStart[3] = 0x5f;
         nDefaultPort = 18344;
-        nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
         const size_t N = 48, K = 5;
         BOOST_STATIC_ASSERT(equihash_parameters_acceptable(N, K));

@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index 889a70ea6b..34686719e3 100644
+index 96382acd76..b4ee705513 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -483,8 +483,9 @@ if test x$use_hardening != xno; then
@@ -13,7 +13,7 @@ index 889a70ea6b..34686719e3 100644
      AX_CHECK_LINK_FLAG([[-Wl,-z,relro]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,relro"],[AC_MSG_WARN(Cannot enable RELRO)])
      AX_CHECK_LINK_FLAG([[-Wl,-z,now]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,now"],[AC_MSG_WARN(Cannot enable BIND_NOW)])
    else
-@@ -728,7 +729,14 @@ AC_CHECK_LIB([gmp],[[__gmpn_sub_n]],GMP_LIBS=-lgmp, [AC_MSG_ERROR(libgmp missing
+@@ -732,7 +733,14 @@ AC_CHECK_LIB([gmp],[[__gmpn_sub_n]],GMP_LIBS=-lgmp, [AC_MSG_ERROR(libgmp missing
  AC_CHECK_HEADER([gmpxx.h],,AC_MSG_ERROR(libgmpxx headers missing))
  AC_CHECK_LIB([gmpxx],[main],GMPXX_LIBS=-lgmpxx, [AC_MSG_ERROR(libgmpxx missing)])
  
@@ -88,34 +88,11 @@ index b10ce89ebf..ad42d5b9c4 100644
  endef
  
  define $(package)_stage_cmds
-diff --git a/depends/packages/libgmp.mk b/depends/packages/libgmp.mk
-index 2e55b05f61..ac0189c5ea 100644
---- a/depends/packages/libgmp.mk
-+++ b/depends/packages/libgmp.mk
-@@ -1,11 +1,16 @@
- package=libgmp
--$(package)_version=6.1.1
-+$(package)_version=6.1.2
- $(package)_download_path=https://gmplib.org/download/gmp/
- $(package)_file_name=gmp-$($(package)_version).tar.bz2
--$(package)_sha256_hash=a8109865f2893f1373b0a8ed5ff7429de8db696fc451b1036bd7bdf95bbeffd6
-+$(package)_sha256_hash=5275bb04f4863a13516b2f39392ac5e272f5e1bb8057b18aec1c9b79d73d8fb2
- $(package)_dependencies=
-+$(package)_patches=libgmp-win-6.1.2.patch
- $(package)_config_opts=--enable-cxx --disable-shared
- 
-+define $(package)_preprocess_cmds
-+  patch -p1 < $($(package)_patch_dir)/libgmp-win-6.1.2.patch
-+endef
-+
- define $(package)_config_cmds
-   $($(package)_autoconf) --host=$(host) --build=$(build)
- endef
 diff --git a/depends/packages/librustzcash.mk b/depends/packages/librustzcash.mk
-index 446080f9a4..d19a545c32 100644
+index 46cf909f19..7283787323 100644
 --- a/depends/packages/librustzcash.mk
 +++ b/depends/packages/librustzcash.mk
-@@ -8,18 +8,29 @@ $(package)_git_commit=36d7acf3f37570f499fc8fe79fda372e5eb873ca
+@@ -8,18 +8,29 @@ $(package)_git_commit=f5d2afb4eabac29b1b1cc860d66e45a5b48b4f88
  $(package)_dependencies=rust $(rust_crates)
  $(package)_patches=cargo.config
  
@@ -148,17 +125,17 @@ index 446080f9a4..d19a545c32 100644
    cp include/librustzcash.h $($(package)_staging_dir)$(host_prefix)/include/
  endef
 diff --git a/depends/packages/rust.mk b/depends/packages/rust.mk
-index 07665cef6b..ccc4a19dcc 100644
+index 9340a6a8d9..7c2e313ab0 100644
 --- a/depends/packages/rust.mk
 +++ b/depends/packages/rust.mk
 @@ -5,10 +5,36 @@ $(package)_file_name_linux=rust-$($(package)_version)-x86_64-unknown-linux-gnu.t
- $(package)_sha256_hash_linux=13691d7782577fc9f110924b26603ade1990de0b691a3ce2dc324b4a72a64a68
+ $(package)_sha256_hash_linux=2a1390340db1d24a9498036884e6b2748e9b4b057fc5219694e298bdaa37b810
  $(package)_file_name_darwin=rust-$($(package)_version)-x86_64-apple-darwin.tar.gz
- $(package)_sha256_hash_darwin=38708803c3096b8f101d1919ee2d7e723b0adf1bc1bb986b060973b57d8c7c28
+ $(package)_sha256_hash_darwin=5d7a70ed4701fe9410041c1eea025c95cad97e5b3d8acc46426f9ac4f9f02393
 -$(package)_file_name_mingw32=rust-mingw-$($(package)_version)-x86_64-pc-windows-gnu.tar.gz
--$(package)_sha256_hash_mingw32=156f99baf34a7a52867879cde17b762481c49aa280ca1b8fee3c4c5b7b43a408
+-$(package)_sha256_hash_mingw32=17effb289f53af43c36be48635364db7eed68c5a411410216eb75a57c39219e3
 +$(package)_file_name_mingw32=rust-$($(package)_version)-x86_64-pc-windows-gnu.tar.gz
-+$(package)_sha256_hash_mingw32=4586d69edcb22f7ebd651cd305dce67ead065e8a60994a7d64fc8b472fc4e51b
++$(package)_sha256_hash_mingw32=55c07426f791c51c8a2b6934b35784175c4abb4e03f123f3e847109c4dc1ad8b
  
 +ifeq ($(host_os),mingw32)
 +$(package)_build_subdir=buildos
@@ -190,147 +167,8 @@ index 07665cef6b..ccc4a19dcc 100644
    ./install.sh --destdir=$($(package)_staging_dir) --prefix=$(host_prefix)/native --disable-ldconfig
  endef
 +endif
-diff --git a/depends/patches/libgmp/libgmp-win-6.1.2.patch b/depends/patches/libgmp/libgmp-win-6.1.2.patch
-new file mode 100644
-index 0000000000..9bef76731a
---- /dev/null
-+++ b/depends/patches/libgmp/libgmp-win-6.1.2.patch
-@@ -0,0 +1,132 @@
-+diff -ru gmp-6.1.2/gmp-h.in gmp-6.1.2-win/gmp-h.in
-+--- gmp-6.1.2/gmp-h.in	2016-12-16 16:45:27.000000000 +0100
-++++ gmp-6.1.2-win/gmp-h.in	2017-01-31 00:12:54.000000000 +0100
-+@@ -625,7 +625,7 @@
-+ __GMP_DECLSPEC void mpz_add (mpz_ptr, mpz_srcptr, mpz_srcptr);
-+ 
-+ #define mpz_add_ui __gmpz_add_ui
-+-__GMP_DECLSPEC void mpz_add_ui (mpz_ptr, mpz_srcptr, unsigned long int);
-++__GMP_DECLSPEC void mpz_add_ui (mpz_ptr, mpz_srcptr, unsigned long long int);
-+ 
-+ #define mpz_addmul __gmpz_addmul
-+ __GMP_DECLSPEC void mpz_addmul (mpz_ptr, mpz_srcptr, mpz_srcptr);
-+@@ -830,7 +830,7 @@
-+ 
-+ #define mpz_get_ui __gmpz_get_ui
-+ #if __GMP_INLINE_PROTOTYPES || defined (__GMP_FORCE_mpz_get_ui)
-+-__GMP_DECLSPEC unsigned long int mpz_get_ui (mpz_srcptr) __GMP_NOTHROW __GMP_ATTRIBUTE_PURE;
-++__GMP_DECLSPEC unsigned long long int mpz_get_ui (mpz_srcptr) __GMP_NOTHROW __GMP_ATTRIBUTE_PURE;
-+ #endif
-+ 
-+ #define mpz_getlimbn __gmpz_getlimbn
-+@@ -1029,7 +1029,7 @@
-+ __GMP_DECLSPEC int mpz_set_str (mpz_ptr, const char *, int);
-+ 
-+ #define mpz_set_ui __gmpz_set_ui
-+-__GMP_DECLSPEC void mpz_set_ui (mpz_ptr, unsigned long int);
-++__GMP_DECLSPEC void mpz_set_ui (mpz_ptr, unsigned long long int);
-+ 
-+ #define mpz_setbit __gmpz_setbit
-+ __GMP_DECLSPEC void mpz_setbit (mpz_ptr, mp_bitcnt_t);
-+@@ -1052,10 +1052,10 @@
-+ __GMP_DECLSPEC void mpz_sub (mpz_ptr, mpz_srcptr, mpz_srcptr);
-+ 
-+ #define mpz_sub_ui __gmpz_sub_ui
-+-__GMP_DECLSPEC void mpz_sub_ui (mpz_ptr, mpz_srcptr, unsigned long int);
-++__GMP_DECLSPEC void mpz_sub_ui (mpz_ptr, mpz_srcptr, unsigned long long int);
-+ 
-+ #define mpz_ui_sub __gmpz_ui_sub
-+-__GMP_DECLSPEC void mpz_ui_sub (mpz_ptr, unsigned long int, mpz_srcptr);
-++__GMP_DECLSPEC void mpz_ui_sub (mpz_ptr, unsigned long long int, mpz_srcptr);
-+ 
-+ #define mpz_submul __gmpz_submul
-+ __GMP_DECLSPEC void mpz_submul (mpz_ptr, mpz_srcptr, mpz_srcptr);
-+@@ -1763,7 +1763,7 @@
-+ #if ! defined (__GMP_FORCE_mpz_get_ui)
-+ __GMP_EXTERN_INLINE
-+ #endif
-+-unsigned long
-++unsigned long long
-+ mpz_get_ui (mpz_srcptr __gmp_z) __GMP_NOTHROW
-+ {
-+   mp_ptr __gmp_p = __gmp_z->_mp_d;
-+@@ -1776,6 +1776,7 @@
-+ #if GMP_NAIL_BITS == 0 || defined (_LONG_LONG_LIMB)
-+   /* limb==long and no nails, or limb==longlong, one limb is enough */
-+   return (__gmp_n != 0 ? __gmp_l : 0);
-++
-+ #else
-+   /* limb==long and nails, need two limbs when available */
-+   __gmp_n = __GMP_ABS (__gmp_n);
-+@@ -1784,6 +1785,7 @@
-+   else
-+     return __gmp_l + (__gmp_p[1] << GMP_NUMB_BITS);
-+ #endif
-++
-+ }
-+ #endif
-+ 
-+@@ -2069,9 +2071,9 @@
-+ #define __GMPN_CMP(result, xp, yp, size)                                \
-+   do {                                                                  \
-+     mp_size_t  __gmp_i;                                                 \
-+-    mp_limb_t  __gmp_x, __gmp_y;                                        \
-++    unsigned long long  __gmp_x, __gmp_y;                               \
-+                                                                         \
-+-    /* ASSERT ((size) >= 0); */                                         \
-++    /*ASSERT ((size) >= 0);*/	                                        \
-+                                                                         \
-+     (result) = 0;                                                       \
-+     __gmp_i = (size);                                                   \
-+diff -ru gmp-6.1.2/mpz/aors_ui.h gmp-6.1.2-win/mpz/aors_ui.h
-+--- gmp-6.1.2/mpz/aors_ui.h	2016-12-16 16:45:27.000000000 +0100
-++++ gmp-6.1.2-win/mpz/aors_ui.h	2017-01-31 00:12:54.000000000 +0100
-+@@ -56,14 +56,14 @@
-+ 
-+ 
-+ void
-+-FUNCTION (mpz_ptr w, mpz_srcptr u, unsigned long int vval)
-++FUNCTION (mpz_ptr w, mpz_srcptr u, unsigned long long int vval)
-+ {
-+   mp_srcptr up;
-+   mp_ptr wp;
-+   mp_size_t usize, wsize;
-+   mp_size_t abs_usize;
-+ 
-+-#if BITS_PER_ULONG > GMP_NUMB_BITS  /* avoid warnings about shift amount */
-++#if BITS_PER_ULLONG > GMP_NUMB_BITS  /* avoid warnings about shift amount */
-+   if (vval > GMP_NUMB_MAX)
-+     {
-+       mpz_t v;
-+diff -ru gmp-6.1.2/mpz/set_ui.c gmp-6.1.2-win/mpz/set_ui.c
-+--- gmp-6.1.2/mpz/set_ui.c	2016-12-16 16:45:27.000000000 +0100
-++++ gmp-6.1.2-win/mpz/set_ui.c	2017-01-31 00:12:54.000000000 +0100
-+@@ -33,14 +33,14 @@
-+ #include "gmp-impl.h"
-+ 
-+ void
-+-mpz_set_ui (mpz_ptr dest, unsigned long int val)
-++mpz_set_ui (mpz_ptr dest, unsigned long long int val)
-+ {
-+   mp_size_t size;
-+ 
-+   PTR (dest)[0] = val & GMP_NUMB_MASK;
-+   size = val != 0;
-+ 
-+-#if BITS_PER_ULONG > GMP_NUMB_BITS  /* avoid warnings about shift amount */
-++#if BITS_PER_ULONG < GMP_NUMB_BITS  /* avoid warnings about shift amount */
-+   if (val > GMP_NUMB_MAX)
-+     {
-+       MPZ_REALLOC (dest, 2);
-+diff -ru gmp-6.1.2/mpz/ui_sub.c gmp-6.1.2-win/mpz/ui_sub.c
-+--- gmp-6.1.2/mpz/ui_sub.c	2016-12-16 16:45:27.000000000 +0100
-++++ gmp-6.1.2-win/mpz/ui_sub.c	2017-01-31 00:12:54.000000000 +0100
-+@@ -32,7 +32,7 @@
-+ #include "gmp-impl.h"
-+ 
-+ void
-+-mpz_ui_sub (mpz_ptr w, unsigned long int uval, mpz_srcptr v)
-++mpz_ui_sub (mpz_ptr w, unsigned long long int uval, mpz_srcptr v)
-+ {
-+   mp_ptr vp, wp;
-+   mp_size_t vn, wn;
-\ No newline at end of file
 diff --git a/depends/patches/librustzcash/cargo.config b/depends/patches/librustzcash/cargo.config
-index 234a9c97b6..6fafa204d8 100644
+index 7696632a13..a54c9a4a8d 100644
 --- a/depends/patches/librustzcash/cargo.config
 +++ b/depends/patches/librustzcash/cargo.config
 @@ -13,3 +13,6 @@ replace-with = "vendored-sources"
@@ -341,10 +179,10 @@ index 234a9c97b6..6fafa204d8 100644
 +[target.x86_64-pc-windows-gnu]
 +linker = "x86_64-w64-mingw32-gcc"
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 2057fba261..73cb9bd99f 100644
+index e3a4b60a0f..4af45a0cd5 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -41,7 +41,7 @@ LIBZCASH=libzcash.a
+@@ -54,7 +54,7 @@ endif
  $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
  	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
  
@@ -353,7 +191,7 @@ index 2057fba261..73cb9bd99f 100644
  LIBSNARK_CONFIG_FLAGS = CURVE=ALT_BN128 NO_PROCPS=1 NO_DOCS=1 STATIC=1 NO_SUPERCOP=1 FEATUREFLAGS=-DMONTGOMERY_OUTPUT NO_COPY_DEPINST=1 NO_COMPILE_LIBGTEST=1
  if HAVE_OPENMP
  LIBSNARK_CONFIG_FLAGS += MULTICORE=1
-@@ -51,10 +51,10 @@ LIBSNARK_CONFIG_FLAGS += PLATFORM=darwin
+@@ -64,10 +64,10 @@ LIBSNARK_CONFIG_FLAGS += PLATFORM=darwin
  endif
  
  $(LIBSNARK): $(wildcard snark/src/*)
@@ -366,7 +204,7 @@ index 2057fba261..73cb9bd99f 100644
  
  $(LIBUNIVALUE): $(wildcard univalue/lib/*) $(wildcard univalue/include/*)
  	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
-@@ -533,11 +533,9 @@ libzcash_a_SOURCES = \
+@@ -527,11 +527,9 @@ libzcash_a_SOURCES = \
    zcash/circuit/prfs.tcc \
    zcash/circuit/utils.tcc
  
@@ -381,11 +219,24 @@ index 2057fba261..73cb9bd99f 100644
  
  libzcash_a_CPPFLAGS += -DMONTGOMERY_OUTPUT
  
+diff --git a/src/gtest/test_merkletree.cpp b/src/gtest/test_merkletree.cpp
+index 67b08030fb..23c39c0446 100644
+--- a/src/gtest/test_merkletree.cpp
++++ b/src/gtest/test_merkletree.cpp
+@@ -143,7 +143,7 @@ void test_tree(
+                     size_t path_index = convertVectorToInt(path.index);
+ 
+                     commitment.bits.fill_with_bits(pb, bit_vector(commitment_bv));
+-                    positions.fill_with_bits_of_ulong(pb, path_index);
++                    positions.fill_with_bits_of_ulong(pb, path_index);
+ 
+                     authvars.generate_r1cs_witness(path_index, path.authentication_path);
+                     auth.generate_r1cs_witness();
 diff --git a/src/gtest/test_paymentdisclosure.cpp b/src/gtest/test_paymentdisclosure.cpp
-index e9768a6fd8..ad7b57276f 100644
+index ce1322dbbd..c166cdbe1d 100644
 --- a/src/gtest/test_paymentdisclosure.cpp
 +++ b/src/gtest/test_paymentdisclosure.cpp
-@@ -98,7 +98,7 @@ TEST(paymentdisclosure, mainnet) {
+@@ -99,7 +99,7 @@ TEST(paymentdisclosure, mainnet) {
      boost::filesystem::create_directories(pathTemp);
      mapArgs["-datadir"] = pathTemp.string();
  
@@ -486,10 +337,10 @@ index 23f005a3e5..5887048adc 100644
              // Print delineator
              std::cout << "----------------------------------------" << std::endl;
 diff --git a/src/test/rpc_wallet_tests.cpp b/src/test/rpc_wallet_tests.cpp
-index 47c85722a0..cb920d26d6 100644
+index edbcb6552e..119acc0c35 100644
 --- a/src/test/rpc_wallet_tests.cpp
 +++ b/src/test/rpc_wallet_tests.cpp
-@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_z_exportwallet)
+@@ -421,7 +421,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_z_exportwallet)
      BOOST_CHECK_THROW(CallRPC(string("z_exportwallet ") + tmpfilename.string()), runtime_error);
  
      // set exportdir
@@ -498,7 +349,7 @@ index 47c85722a0..cb920d26d6 100644
  
      // run some tests
      BOOST_CHECK_THROW(CallRPC("z_exportwallet"), runtime_error);
-@@ -482,7 +482,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_z_importwallet)
+@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_z_importwallet)
      // write test data to file
      boost::filesystem::path temp = boost::filesystem::temp_directory_path() /
              boost::filesystem::unique_path();
@@ -507,8 +358,21 @@ index 47c85722a0..cb920d26d6 100644
      std::ofstream file(path);
      file << testWalletDump;
      file << std::flush;
+diff --git a/src/zcash/circuit/merkle.tcc b/src/zcash/circuit/merkle.tcc
+index ca89adbedf..09f02ae9f2 100644
+--- a/src/zcash/circuit/merkle.tcc
++++ b/src/zcash/circuit/merkle.tcc
+@@ -52,7 +52,7 @@ public:
+         // number thing in its API.
+         size_t path_index = convertVectorToInt(path.index);
+ 
+-        positions.fill_with_bits_of_ulong(this->pb, path_index);
++        positions.fill_with_bits_of_ulong(this->pb, path_index);
+ 
+         authvars->generate_r1cs_witness(path_index, path.authentication_path);
+         auth->generate_r1cs_witness();
 diff --git a/zcutil/build.sh b/zcutil/build.sh
-index d86ae99ab9..5479ca58d4 100755
+index f10d68d741..c3bea9ea99 100755
 --- a/zcutil/build.sh
 +++ b/zcutil/build.sh
 @@ -33,14 +33,6 @@ if [[ -z "${HOST-}" ]]; then
@@ -523,7 +387,7 @@ index d86ae99ab9..5479ca58d4 100755
 -    CXX=g++
 -fi
 -
- # Allow users to set arbitary compile flags. Most users will not need this.
+ # Allow users to set arbitrary compile flags. Most users will not need this.
  if [[ -z "${CONFIGURE_FLAGS-}" ]]; then
      CONFIGURE_FLAGS=""
 @@ -105,15 +97,11 @@ then
@@ -543,17 +407,6 @@ index d86ae99ab9..5479ca58d4 100755
 -CC="$CC" CXX="$CXX" ./configure --prefix="${PREFIX}" --host="$HOST" --build="$BUILD" "$HARDENING_ARG" "$LCOV_ARG" "$TEST_ARG" "$MINING_ARG" "$PROTON_ARG" $CONFIGURE_FLAGS --enable-werror CXXFLAGS='-g'
 +CONFIG_SITE="$PWD/depends/$HOST/share/config.site" ./configure "$HARDENING_ARG" "$LCOV_ARG" "$TEST_ARG" "$MINING_ARG" "$PROTON_ARG" $CONFIGURE_FLAGS CXXFLAGS='-g'
  "$MAKE" "$@" V=1
-diff --git a/src/snark/AUTHORS b/src/snark/AUTHORS
-index 1b2d7a2..cdc8d66 100644
---- a/src/snark/AUTHORS
-+++ b/src/snark/AUTHORS
-@@ -17,3 +17,6 @@ External contributors:
-     Tadanori TERUYA
-     Sean Bowe
-     Daira Hopwood
-+    @mugatu on forum.z.cash
-+    David Mercer
-+    Joshua Yabut
 diff --git a/src/snark/Makefile b/src/snark/Makefile
 index cceffb9..ac86490 100644
 --- a/src/snark/Makefile
