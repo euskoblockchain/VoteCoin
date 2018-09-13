@@ -5,7 +5,7 @@ cd "$(dirname "$(readlink -f "$0")")"    #'"%#@!
 sudo apt-get install \
       build-essential pkg-config libc6-dev m4 g++-multilib \
       autoconf libtool ncurses-dev unzip git python python-zmq \
-      zlib1g-dev wget bsdmainutils automake
+      zlib1g-dev wget bsdmainutils automake curl
 
 ./fetch-params.sh || exit 1
 
