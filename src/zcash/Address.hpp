@@ -124,6 +124,9 @@ public:
     friend inline bool operator==(const SaplingPaymentAddress& a, const SaplingPaymentAddress& b) {
         return a.d == b.d && a.pk_d == b.pk_d;
     }
+    friend inline bool operator!=(const SaplingPaymentAddress& a, const SaplingPaymentAddress& b) {
+        return a.d != b.d || a.pk_d != b.pk_d;
+    }
     friend inline bool operator<(const SaplingPaymentAddress& a, const SaplingPaymentAddress& b) {
         return (a.d < b.d ||
                 (a.d == b.d && a.pk_d < b.pk_d));
@@ -219,7 +222,7 @@ public:
 };
 
 typedef boost::variant<InvalidEncoding, SproutPaymentAddress, SaplingPaymentAddress> PaymentAddress;
-typedef boost::variant<InvalidEncoding, SproutViewingKey> ViewingKey;
+typedef boost::variant<InvalidEncoding, SproutViewingKey, SaplingIncomingViewingKey> ViewingKey;
 
 }
 
