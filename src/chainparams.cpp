@@ -110,14 +110,17 @@ public:
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170005;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 180000;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].hashActivationBlock =
+            uint256S("00000044711161c9fd4ebe0b41c26c79419ba0dbb0b07f1054bd1ee8bf48c820");
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170007;
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 245555;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].hashActivationBlock =
+            uint256S("00000029403a840f4133679c560a401e9b55c32d4236bd2d5e98b91727c53769");
         consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].nProtocolVersion = 170009;
-        consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].nActivationHeight =
-            Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].nActivationHeight = 477777;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000014a6157c4e02");
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000002a3fc23b2bbb");
 
         /**
          * The message start string should be awesome! ⓩ❤
@@ -142,8 +145,6 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         vSeeds.push_back(CDNSSeedData("votecoin.site", "dnsseed.votecoin.site")); // VoteCoin
-        //vSeeds.push_back(CDNSSeedData("str4d.xyz", "dnsseed.str4d.xyz")); // @str4d
-        //vSeeds.push_back(CDNSSeedData("znodes.org", "dnsseed.znodes.org")); // @bitcartel
 
         // guarantees the first 2 characters, when base58 encoded, are "t1"
         base58Prefixes[PUBKEY_ADDRESS]     = {0x1C,0xB8};
@@ -188,11 +189,12 @@ public:
             (177777, uint256S("0x0000001893fd6c1754987f1256a24758206d8dcb66968d1ac6acd45615987def"))
             (199999, uint256S("0x0000007f82647f3ed9beb69875ce82c5865253dccf53f4cfa1ede2eda2876001"))
             (237000, uint256S("0x0000000d9675244db461a49e7b33ba23521f7c469b3210c2f6ac69179a7b887f"))
-            (385555, uint256S("0x000000008906c05a5f3620a29cf16172ac7c2634ad992ae1310a6250718f9c4c")),
-            1562044893,    // * UNIX timestamp of last checkpoint block
-            1145662,       // * total number of transactions between genesis and last checkpoint
+            (385555, uint256S("0x000000008906c05a5f3620a29cf16172ac7c2634ad992ae1310a6250718f9c4c"))
+            (452222, uint256S("0x000000016dd914cb432d9d564a8409d1c5b67afb5174f1fd85de8a028616500f")),
+            1572260444,    // * UNIX timestamp of last checkpoint block
+            1288364,       // * total number of transactions between genesis and last checkpoint
                            //   (the tx=... number in the SetBestChain debug.log lines)
-            1711           // * estimated number of transactions per day after checkpoint
+            1641           // * estimated number of transactions per day after checkpoint
                            //   total number of tx / checkpoint block height * 576
         };
 
@@ -303,13 +305,19 @@ public:
             Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nProtocolVersion = 170003;
         consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].nActivationHeight = 207500;
+        consensus.vUpgrades[Consensus::UPGRADE_OVERWINTER].hashActivationBlock =
+            uint256S("0000257c4331b098045023fcfbfa2474681f4564ab483f84e4e1ad078e4acf44");
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nProtocolVersion = 170007;
         consensus.vUpgrades[Consensus::UPGRADE_SAPLING].nActivationHeight = 280000;
+        consensus.vUpgrades[Consensus::UPGRADE_SAPLING].hashActivationBlock =
+            uint256S("000420e7fcc3a49d729479fb0b560dd7b8617b178a08e9e389620a9d1dd6361a");
         consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].nProtocolVersion = 170008;
         consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].nActivationHeight = 584000;
+        consensus.vUpgrades[Consensus::UPGRADE_BLOSSOM].hashActivationBlock =
+            uint256S("00367515ef2e781b8c9358b443b6329572599edd02c59e8af67db9785122f298");
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000000001d0c4d9cd");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000001dbb4c4224");
 
         pchMessageStart[0] = 0xfa;
         pchMessageStart[1] = 0x1a;

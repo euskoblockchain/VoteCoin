@@ -1,4 +1,4 @@
-VoteCoin 2.0.7
+VoteCoin 2.1.0
 ==============
 
 What is VoteCoin?
