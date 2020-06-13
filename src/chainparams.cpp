@@ -324,7 +324,7 @@ public:
         pchMessageStart[2] = 0xf9;
         pchMessageStart[3] = 0xbf;
         vAlertPubKey = ParseHex("044e7a1553392325c871c5ace5d6ad73501c66f4c185d6b0453cf45dec5a1322e705c672ac1a27ef7cdaf588c10effdf50ed5f95f85f2f54a5f6159fca394ed0c6");
-        nDefaultPort = 18233;
+        nDefaultPort = 12631;
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(
@@ -459,7 +459,7 @@ public:
         pchMessageStart[1] = 0xe8;
         pchMessageStart[2] = 0x3f;
         pchMessageStart[3] = 0x5f;
-        nDefaultPort = 18344;
+        nDefaultPort = 12842;
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(
