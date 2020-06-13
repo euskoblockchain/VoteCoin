@@ -173,28 +173,7 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
-        checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            (0, consensus.hashGenesisBlock)
-            (10, uint256S("0x003fa6a6bbcea855fb76e478fda40c28b454e74537fbeb889e50b41710d4d41e"))
-            (10000, uint256S("0x00000fbda97b62268d2eb2ed9e63ae23a9a02c3f6cb7023cd56443a215c9c0ed"))
-            (16800, uint256S("0x0000009771cf774a233ca47b5ceee89dd9296c82e8c9b0a96d00f57b26d5925c"))
-            (39555, uint256S("0x0000000bbc03146dfb317de60c346b518e88defa4232db6f64b43a515b6d4df2"))
-            (74444, uint256S("0x0000001853a3a5617dc5aae21bae39da50184b0c6b461ada2ec54b78c38ae7e9"))
-            (99999, uint256S("0x0000000cc5d00876dbcd12bee9345e1596f03366166b4b07a93aa72dd9705fdd"))
-            (124124, uint256S("0x0000006e4c2853c154001e6af6671ee0189d6c6c83447c8f43783839caddf91e"))
-            (149999, uint256S("0x00000016a4855e91a2f435ad480d16dfe297b9d6e3319da5b3f3aa19641d4236"))
-            (177777, uint256S("0x0000001893fd6c1754987f1256a24758206d8dcb66968d1ac6acd45615987def"))
-            (199999, uint256S("0x0000007f82647f3ed9beb69875ce82c5865253dccf53f4cfa1ede2eda2876001"))
-            (237000, uint256S("0x0000000d9675244db461a49e7b33ba23521f7c469b3210c2f6ac69179a7b887f"))
-            (385555, uint256S("0x000000008906c05a5f3620a29cf16172ac7c2634ad992ae1310a6250718f9c4c"))
-            (452222, uint256S("0x000000016dd914cb432d9d564a8409d1c5b67afb5174f1fd85de8a028616500f")),
-            1572260444,    // * UNIX timestamp of last checkpoint block
-            1288364,       // * total number of transactions between genesis and last checkpoint
-                           //   (the tx=... number in the SetBestChain debug.log lines)
-            1641           // * estimated number of transactions per day after checkpoint
-                           //   total number of tx / checkpoint block height * 576
-        };
+        checkpointData = (CCheckpointData) {};
 
         // Hardcoded fallback value for the Sprout shielded value pool balance
         // for nodes that have not reindexed since the introduction of monitoring
