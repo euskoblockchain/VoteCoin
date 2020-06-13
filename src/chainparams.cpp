@@ -125,10 +125,10 @@ public:
         /**
          * The message start string should be awesome! ⓩ❤
          */
-        pchMessageStart[0] = 0x24;
-        pchMessageStart[1] = 0xe9;
-        pchMessageStart[2] = 0x27;
-        pchMessageStart[3] = 0x64;
+        pchMessageStart[0] = 0xf1;
+        pchMessageStart[1] = 0x27;
+        pchMessageStart[2] = 0xe9;
+        pchMessageStart[3] = 0xd4;
         vAlertPubKey = ParseHex("04b7ecf0baa90495ceb4e4090f6b2fd37eec1e9c85fac68a487f3ce11589692e4a317479316ee814e066638e1db54e37a10689b70286e6315b1087b6615d179264");
         nDefaultPort = 2626;
         nPruneAfterHeight = 100000;
@@ -319,10 +319,10 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000001dbb4c4224");
 
-        pchMessageStart[0] = 0xfa;
-        pchMessageStart[1] = 0x1a;
-        pchMessageStart[2] = 0xf9;
-        pchMessageStart[3] = 0xbf;
+        pchMessageStart[0] = 0xf9;
+        pchMessageStart[1] = 0xbf;
+        pchMessageStart[2] = 0xfb;
+        pchMessageStart[3] = 0x1f;
         vAlertPubKey = ParseHex("044e7a1553392325c871c5ace5d6ad73501c66f4c185d6b0453cf45dec5a1322e705c672ac1a27ef7cdaf588c10effdf50ed5f95f85f2f54a5f6159fca394ed0c6");
         nDefaultPort = 12631;
         nPruneAfterHeight = 1000;
@@ -455,10 +455,10 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
 
-        pchMessageStart[0] = 0xaa;
-        pchMessageStart[1] = 0xe8;
-        pchMessageStart[2] = 0x3f;
-        pchMessageStart[3] = 0x5f;
+        pchMessageStart[0] = 0x5f;
+        pchMessageStart[1] = 0x3f;
+        pchMessageStart[2] = 0xe7;
+        pchMessageStart[3] = 0xa1;
         nDefaultPort = 12842;
         nPruneAfterHeight = 1000;
 
